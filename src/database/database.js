@@ -17,9 +17,21 @@ export class Database {
       fs.writeFile(databasePath, JSON.stringify(this.#database))
    }
 
-   select(table, search) {}
+   select(table, search) {
+      let data = this.#database[table] ?? []
+      return data
+   }
 
-   insert(table, data) {}
+   insert(table, data) {
+      if (!data) return
+      if (Array.isArray(this.#database[table])) {
+         this.#database[table].push(data)
+      } else {
+         this.#database[table] = [data]
+      }
+      this.#persist()
+      return data
+   }
 
    update(table, id) {}
 
