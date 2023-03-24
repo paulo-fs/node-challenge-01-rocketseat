@@ -40,6 +40,24 @@ export const routes = [
    },
 
    {
+      method: 'UPDATE',
+      path: buildRoutePath('/tasks/:id'),
+      handler: (req, res) => {
+         return res.end()
+      }
+   },
+
+   {
+      method: 'DELETE',
+      path: buildRoutePath('/tasks/:id'),
+      handler: (req, res) => {
+         const { id } = req.params
+         database.delete('tasks', id)
+         return res.writeHead(204).end()
+      }
+   },
+
+   {
       method: '',
       path: buildRoutePath(''),
       handler: (req, res) => {

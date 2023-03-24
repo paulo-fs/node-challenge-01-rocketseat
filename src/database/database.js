@@ -35,5 +35,9 @@ export class Database {
 
    update(table, id) {}
 
-   delete(table, id) {}
+   delete(table, id) {
+      const filteredList = this.#database[table].filter(row => row.id !== id)
+      this.#database[table] = filteredList
+      this.#persist()
+   }
 }
