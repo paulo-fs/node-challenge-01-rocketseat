@@ -20,6 +20,16 @@ export class Database {
    select(table, search, id) {
       let data = this.#database[table] ?? []
 
+      if (search) {
+         console.log(search)
+         data = data.filter(row => {
+            return Object.entries(search).some(([key, value]) => {
+               return row[key].toLowerCase().includes(value.toLowerCase())
+            })
+         })
+         return data
+      }
+
       if (id) {
          const itemIndex = this.#database[table].findIndex(row => row.id === id)
          return this.#database[table][itemIndex]
