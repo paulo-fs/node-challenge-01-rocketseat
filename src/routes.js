@@ -48,8 +48,7 @@ export const routes = [
 
          const updatedTask = {
             title,
-            description,
-            updated_at: new Date()
+            description
          }
 
          database.update('tasks', id, updatedTask)
@@ -68,10 +67,18 @@ export const routes = [
    },
 
    {
-      method: '',
-      path: buildRoutePath(''),
+      method: 'PATCH',
+      path: buildRoutePath('/tasks/:id'),
       handler: (req, res) => {
-         return res.end()
+         const { id } = req.params
+         const task = database.select('tasks', null, id)
+         const data = {
+            iscomplete: true
+         }
+         console.log(task)
+         database.update('tasks', id, data)
+
+         return res.end(JSON.stringify(task))
       }
    },
 ]

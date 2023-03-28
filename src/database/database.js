@@ -17,8 +17,14 @@ export class Database {
       fs.writeFile(databasePath, JSON.stringify(this.#database))
    }
 
-   select(table, search) {
+   select(table, search, id) {
       let data = this.#database[table] ?? []
+
+      if (id) {
+         const itemIndex = this.#database[table].findIndex(row => row.id === id)
+         return this.#database[table][itemIndex]
+      }
+
       return data
    }
 
@@ -40,7 +46,9 @@ export class Database {
          const foundItem = this.#database[table][itemIndex]
          if(data.title) foundItem.title = data.title
          if(data.description) foundItem.description = data.description
-         if(data.updated_at) foundItem.updated_at = data.updated_at
+         if(data.iscomplete) foundItem.iscomplete = !foundItem.iscomplete
+         if(data.iscomplete) foundItem.iscomplete ? foundItem.completed_at = new Date() : foundItem.completed_at = null
+         foundItem.updated_at = new Date()
          this.#persist()
          return data
       }
