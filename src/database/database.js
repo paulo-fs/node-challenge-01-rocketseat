@@ -33,7 +33,18 @@ export class Database {
       return data
    }
 
-   update(table, id) {}
+   update(table, id, data) {
+      if (!data) return
+      const itemIndex = this.#database[table].findIndex(row => row.id === id)
+      if (itemIndex > -1) {
+         const foundItem = this.#database[table][itemIndex]
+         if(data.title) foundItem.title = data.title
+         if(data.description) foundItem.description = data.description
+         if(data.updated_at) foundItem.updated_at = data.updated_at
+         this.#persist()
+         return data
+      }
+   }
 
    delete(table, id) {
       const filteredList = this.#database[table].filter(row => row.id !== id)
