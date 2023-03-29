@@ -32,6 +32,11 @@ export class Database {
 
       if (id) {
          const itemIndex = this.#database[table].findIndex(row => row.id === id)
+
+         if (itemIndex === -1) {
+            return 404
+         }
+
          return this.#database[table][itemIndex]
       }
 
@@ -61,10 +66,17 @@ export class Database {
          foundItem.updated_at = new Date()
          this.#persist()
          return data
+      } else {
+         return 404
       }
    }
 
    delete(table, id) {
+      const itemIndex = this.#database[table].findIndex(row => row.id === id)
+      if (itemIndex === -1) {
+         return 404
+      }
+
       const filteredList = this.#database[table].filter(row => row.id !== id)
       this.#database[table] = filteredList
       this.#persist()

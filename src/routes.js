@@ -13,7 +13,23 @@ export const routes = [
          const tasks = database.select('tasks', search ? {
             title: search, description: search
          } : null)
+         
          return res.end(JSON.stringify(tasks))
+      }
+   },
+
+   {
+      method: 'GET',
+      path: buildRoutePath('/tasks/:id'),
+      handler: (req, res) => {
+         const { id } = req.params
+         const task = database.select('tasks', null, id)
+
+         if (task === 404) {
+            return res.writeHead(404).end('No task found')
+         }
+
+         return res.end(JSON.stringify(task))
       }
    },
 
@@ -54,7 +70,12 @@ export const routes = [
             description
          }
 
-         database.update('tasks', id, updatedTask)
+         const result = database.update('tasks', id, updatedTask)
+
+         if (result === 404) {
+            return res.writeHead(404).end('Task not found')
+         }
+
          return res.end()
       }
    },
@@ -64,21 +85,25 @@ export const routes = [
       path: buildRoutePath('/tasks/:id'),
       handler: (req, res) => {
          const { id } = req.params
-         database.delete('tasks', id)
+         const result = database.delete('tasks', id)
+         
+         if (result === 404) {
+            return res.writeHead(404).end('Task not found')
+         }
+
          return res.writeHead(204).end()
       }
    },
 
    {
       method: 'PATCH',
-      path: buildRoutePath('/tasks/:id'),
+      path: buildRoutePath('/tasks/:id/complete'),
       handler: (req, res) => {
          const { id } = req.params
          const task = database.select('tasks', null, id)
          const data = {
             iscomplete: true
          }
-         console.log(task)
          database.update('tasks', id, data)
 
          return res.end(JSON.stringify(task))
