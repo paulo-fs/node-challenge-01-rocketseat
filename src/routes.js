@@ -50,11 +50,40 @@ export const routes = [
                updated_at: new Date()
             }
 
-            console.log(newTask)
             database.insert('tasks', newTask)
             return res.writeHead(201).end(JSON.stringify(newTask))
          }
          return res.writeHead(400).end('Something went wrong')
+      }
+   },
+
+   {
+      method: 'POST',
+      path: buildRoutePath('/tasks/upload'),
+      handler: (req, res) => {
+         const { body } = req
+
+         try {
+            body.forEach(task => {
+               const { title, description } = task
+   
+               const newTask = {
+                  id: randomUUID(),
+                  title,
+                  description,
+                  iscomplete: false,
+                  completed_at: null,
+                  created_at: new Date(),
+                  updated_at: new Date()
+               }
+   
+               database.insert('tasks', newTask)
+            })
+         } catch (err) {
+            console.log(err)
+         }
+
+         return res.writeHead(204).end()
       }
    },
 
